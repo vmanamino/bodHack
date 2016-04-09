@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Boston Index of Health Inspection Violations</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="intro">
+            <div class="food-icon">
+            </div>
+            <div class="text">
+                <h1>Boston Index of Health Inspection Violations by Food Establishments</h1>
+                <p>Here you can look up inspections of food establishments in Boston where violations were recorded.  The number and details are given for each establishment of its violations. </p>
+                <p>Enter a food establishement or zip code in the appropriate box below:</p>
+            </div>
+        </div>
+        <div class="index">
+            <h3>Look up by establishment</h3>
+            <p>For this search, you need to know the precise name. (I am working on making this keyword responsive.)  You may want to search by zip code farther below if you are unsure of the precise name.</p>
+            <form class="est-getter">
+                <input type="text" placeholder='e.g., "HTML" or "HTML;CSS"' name="tags" size="30" autofocus required>
+				<input type="submit" value="Submit">
+            </form>
+            <h3>Look up by zip code</h3>
+            <p>When you enter the zip code, you get back a list of food establishments which the City of Boston has inspected and found to have Health Violations. </p>
+            <form class="zip-getter">
+                <input type="text" placeholder='e.g., "HTML" or "HTML;CSS"' name="tags" size="30" autofocus required>
+				<input type="submit" value="Submit">
+            </form>
+        </div>
+        <div class="listing">
+            
+        </div>
+    </div>
+    <div class="templates hidden">
+        <dl class="establishment">
+            <dt>Establishment</dt>
+                <dd class="est-text"></dd>
+            <dt>Violation Type</dt>
+                <dd class="viol-desc"></dd>
+            <dt>Violation Code</dt>
+                <dd class="viol-code"></dd>
+            <dt></dt>
+        </dl>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+	<script src="js/app.js"></script> 
+</body>
+</html>

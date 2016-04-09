@@ -1,0 +1,24 @@
+.container {
+	margin: 3em auto;
+	width: 600px;
+}
+
+.food-icon {
+	background: url('../images/Food-Community-Logo.png') no-repeat center center;
+	width: 200px;
+	height: 200px;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	margin-right: 1em;
+	border-radius: 5px;
+}
+
+.intro {
+	margin-bottom: 1em;
+}
+
+.hidden {
+	display: none;
+}
