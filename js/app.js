@@ -1,10 +1,80 @@
+// record for food establishment
+var indexRecord = {
+    name: '',
+    address: '',
+    zip: '',
+    violations: 0
+};
 
+// list of establishment names for quick handling, conservative layout, and easy referencing
+var indexList = new Array();
+
+// record for each violation referencing each index record via the businessname
+var violation = {
+    businessname: '',
+    violation: '',
+    description: '',
+    comments: '',
+    result: '',
+    resultdttm: ''
+};
+
+function showName(name){
+    var entry = $('.templates .entry').clone();
+    var entryName = entry.find('.name a');
+    entryName.text(name);
+    $('.listing').append(entry);
+}
+
+function addIndex(index){
+    for (var i = 0; i < index.length; i++){
+        showName(index[i]);
+    }
+}
+
+function createIndex(names){
+    names = names.sort();
+    console.log(names.length + "length of names");
+    for (var i = 0; i < names.length; i++){
+        if (i){
+            if (!(names[i] === names[i-1])){
+                // adding element by assignment with equal didn't work?
+                // console.log(names[i]);
+                indexList.push(names[i]);
+            }
+        }
+        else {
+            // adding elements by assignment with equal didn't work?
+            // console.log(names[i]);
+            indexList.push(names[i]);
+        }
+    }
+    console.log("length of index" + indexList.length);
+    // for (var i = 0; i < indexList.length; i++) {
+    //     console.log(indexList[i]);
+    // }
+    addIndex(indexList);
+    
+}
+
+// group establishments returned by bussinessname
+function groupEstablishments(response){
+    // response = response.sort();
+    console.log(response.length + "length of response");
+    var names = [];
+    
+    for (var i = 0; i < response.length; i++ ){
+        names[i] = response[i].businessname;
+    }
+    createIndex(names);
+    
+}
 
 function getZip(zip){
     // console.log("get establishment");
     
     var request = {
-        $query: 'SELECT businessname, address, zip, violdesc, comments, result, resultdttm, violation WHERE zip=\''+zip+'\' ORDER BY resultdttm DESC'
+        $query: 'SELECT businessname, address, zip, violdesc, comments, result, resultdttm, violation WHERE zip=\''+zip+'\'' //ORDER BY businessname DESC
     };
     
     $.ajax({
@@ -14,8 +84,16 @@ function getZip(zip){
         type: 'GET'
     })
     .done(function(response){
-        console.log(response); 
-    });
+        console.log("call received and answered successfully");
+        console.log(response.length);
+        groupEstablishments(response);
+        
+        
+    })
+    .fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
+		var errorElem = showError(error);
+		$('.search-results').append(errorElem);
+	});    
 }
 
 
