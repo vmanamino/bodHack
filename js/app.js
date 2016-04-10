@@ -6,9 +6,6 @@ var indexRecord = {
     violations: 0
 };
 
-// list of establishment names for quick handling, conservative layout, and easy referencing
-var indexList = new Array();
-
 // record for each violation referencing each index record via the businessname
 var violation = {
     businessname: '',
@@ -32,8 +29,11 @@ function addIndex(index){
     }
 }
 
+// create the index that will point to a business record
 function createIndex(names){
-    names = names.sort();
+    // list of establishment names for quick handling, conservative layout, and easy referencing
+    var indexList = new Array();
+    var names = names.sort();
     console.log(names.length + "length of names");
     for (var i = 0; i < names.length; i++){
         if (i){
@@ -57,9 +57,10 @@ function createIndex(names){
     
 }
 
-// group establishments returned by bussinessname
+// group returned establishments by bussinessname
 function groupEstablishments(response){
     // response = response.sort();
+    $('.listing').empty();
     console.log(response.length + "length of response");
     var names = [];
     
@@ -72,7 +73,6 @@ function groupEstablishments(response){
 
 function getZip(zip){
     // console.log("get establishment");
-    
     var request = {
         $query: 'SELECT businessname, address, zip, violdesc, comments, result, resultdttm, violation WHERE zip=\''+zip+'\'' //ORDER BY businessname DESC
     };
@@ -92,7 +92,7 @@ function getZip(zip){
     })
     .fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
 		var errorElem = showError(error);
-		$('.search-results').append(errorElem);
+		$('.listing').append(errorElem);
 	});    
 }
 
@@ -128,7 +128,8 @@ $(document).ready( function() {
     // });
     $(".zip-getter").submit(function(e){
         e.preventDefault();
-        $(".listing").html('');
+        // $(".listing").empty();
+        $('.listing').html('');
         var zip = $(this).find("input[name='zip']").val();
         getZip(zip);
     });
