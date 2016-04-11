@@ -6,6 +6,8 @@ var indexRecord = {
     violations: 0
 };
 
+var records = new Array();
+
 // record for each violation referencing each index record via the businessname
 var violation = {
     businessname: '',
@@ -27,6 +29,52 @@ function addIndex(index){
     for (var i = 0; i < index.length; i++){
         showName(index[i]);
     }
+}
+
+function linkToRecord(name){
+    
+}
+
+function createRecords(response, names){
+    records.length = 0;
+    var responseSorted = new Array();
+    
+    //sort response array to make things faster
+    responseSorted = response.sort(function(a, b){
+        if (a.businessname > b.businessname){
+            return 1;
+        }
+        if (a.businessname < b.businessname){
+            return -1;
+        }
+        return 0;
+    });
+    // console.log("create Records");
+    // for (var i = 0; i < responseSorted.length; i++){
+    //     // console.log(responseSorted[i].businessname);
+    // }
+    var offset = 0;
+    for (var i = 0; i < names.length; i++){
+        var record = Object.create(indexRecord);
+        record.name = names[i];
+        for (var j = offset; j < responseSorted.length; j++ ){
+            if (record.name == responseSorted[j].businessname){
+                record.violations += 1;
+                if (!record.zip){
+                    record.zip = responseSorted[j].zip;
+                }
+                if (record.address == ''){
+                    record.address = responseSorted[j].address;
+                }
+            }
+            else {
+                offset = j;
+                break;
+            }
+        }
+        records.push(record);
+    }
+    console.log(records);
 }
 
 // create the index that will point to a business record
@@ -54,6 +102,7 @@ function createIndex(names){
     //     console.log(indexList[i]);
     // }
     addIndex(indexList);
+    return indexList;
     
 }
 
@@ -67,7 +116,8 @@ function groupEstablishments(response){
     for (var i = 0; i < response.length; i++ ){
         names[i] = response[i].businessname;
     }
-    createIndex(names);
+    names = createIndex(names);
+    createRecords(response, names);
     
 }
 
@@ -85,7 +135,7 @@ function getZip(zip){
     })
     .done(function(response){
         console.log("call received and answered successfully");
-        console.log(response.length);
+        // console.log(response.length);
         groupEstablishments(response);
         
         
