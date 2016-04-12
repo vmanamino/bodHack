@@ -3,7 +3,8 @@ var indexRecord = {
     name: '',
     address: '',
     zip: '',
-    violations: 0
+    violations: 0,
+    offset: 0
 };
 
 var records = new Array();
@@ -12,11 +13,13 @@ var records = new Array();
 var violation = {
     businessname: '',
     violation: '',
-    description: '',
+    desc: '',
     comments: '',
     result: '',
     resultdttm: ''
 };
+
+var violations = new Array();
 
 function showName(name){
     var entry = $('.templates .entry').clone();
@@ -39,13 +42,43 @@ function showRecord(object){
     estZip.text(object.zip);
     estZip.click(function(e){
         e.preventDefault();
+        $(".record").empty();
         getZip(object.zip);
     });
     var estViolations = establishment.find('.violations-count a');
     estViolations.text(object.violations);
+    estViolations.click(function(e){
+        e.preventDefault();
+        $(".record").empty();
+        addViolation(object);
+    });
     $('.listing').empty();
+    $('.violations').empty();
     $('.record').empty();
     $('.record').append(establishment);
+}
+
+function showViolation(object){
+    var viol = $(".templates .violation").clone();
+    var name = viol.find('.name a');
+    name.text(object.businessname);
+    name.click(function(e){
+        e.preventDefault();
+        $(".violations").empty();
+        addRecord(object.businessname);
+    });
+    var code = viol.find('.code');
+    code.text(object.violation);
+    var desc = viol.find('.desc');
+    desc.text(object.desc);
+    var comments = viol.find('.comments');
+    comments.text(object.comments);
+    var result = viol.find('.result');
+    result.text(object.result);
+    var resultdt = viol.find('.resultdt');
+    resultdt.text(object.resultdttm);
+    $('.record').empty();
+    $('.violations').append(viol);
 }
 
 function addRecord(name){
@@ -63,12 +96,17 @@ function addIndex(index){
     }
 }
 
-// function linkToRecord(name){
-    
-// }
+function addViolation(object){
+    // console.log("addViolation");
+    for (var i = object.offset; i < (object.offset + object.violations); i++){
+        // console.log(violations[i]);
+        showViolation(violations[i]);
+    }
+}
 
 function createRecords(response, names){
     records.length = 0;
+    violations.length = 0;
     var responseSorted = new Array();
     
     //sort response array to make things faster
@@ -90,13 +128,24 @@ function createRecords(response, names){
         var record = Object.create(indexRecord);
         record.name = names[i];
         for (var j = offset; j < responseSorted.length; j++ ){
+            var violationRecord = Object.create(violation);
             if (record.name == responseSorted[j].businessname){
+                violationRecord.businessname = responseSorted[j].businessname;
+                violationRecord.violation = responseSorted[j].violation;
+                violationRecord.desc = responseSorted[j].violdesc;
+                violationRecord.comments = responseSorted[j].comments;
+                violationRecord.result = responseSorted[j].result;
+                violationRecord.resultdttm = responseSorted[j].resultdttm;
+                violations.push(violationRecord);
                 record.violations += 1;
                 if (!record.zip){
                     record.zip = responseSorted[j].zip;
                 }
                 if (!record.address){
                     record.address = responseSorted[j].address;
+                }
+                if (!record.offset){
+                    record.offset = offset;
                 }
             }
             else {
@@ -106,11 +155,12 @@ function createRecords(response, names){
         }
         records.push(record);
     }
-    // console.log(records);
+    console.log(records);
     // var display = records.map(function(il){
     //     return il.name;
     // }).indexOf('HOT TOMATOES');
     // console.log(display);
+    console.log(violations);
 }
 
 // create the index that will point to a business record
@@ -140,6 +190,10 @@ function createIndex(names){
     addIndex(indexList);
     showSearchResults(names.length, indexList.length);
     return indexList;
+    
+}
+
+function createViolations(){
     
 }
 
@@ -223,8 +277,10 @@ $(document).ready( function() {
     // });
     $(".zip-getter").submit(function(e){
         e.preventDefault();
-        // $(".listing").empty();
-        $('.listing').html('');
+        $(".search-results").html('');
+        $(".listing").empty();
+        $(".record").empty();
+        // $('.listing').html('');
         var zip = $(this).find("input[name='zip']").val();
         getZip(zip);
     });
