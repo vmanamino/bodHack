@@ -98,9 +98,24 @@ function addIndex(index){
 
 function addViolation(object){
     // console.log("addViolation");
+    var viols = new Array();
     for (var i = object.offset; i < (object.offset + object.violations); i++){
         // console.log(violations[i]);
-        showViolation(violations[i]);
+        // showViolation(violations[i]);
+        viols.push(violations[i]);
+    }
+    viols.sort(function(a, b){
+        if (a.resultdttm > b.resultdttm){
+            return -1;
+        }
+        if (a.resultdttm < b.resultdttm){
+            return 1;
+        }
+        return 0;
+    });
+    for (var i = 0; i < viols.length; i++) {
+        console.log(viols[i]);
+        showViolation(viols[i]);
     }
 }
 
@@ -193,9 +208,9 @@ function createIndex(names){
     
 }
 
-function createViolations(){
+// function createViolations(){
     
-}
+// }
 
 // group returned establishments by bussinessname
 function groupEstablishments(response){
