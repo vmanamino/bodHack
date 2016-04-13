@@ -192,7 +192,9 @@ function uniqueRecord(record, responseSorted, offset){
         record.violations = 1; // new and unique record
     }
     else {
-        // this is a new and unique record
+        // this is a new and unique record, but the businessname has appeared before, which is why there is a match above
+        // however, the current record passed in as a parameter has the address assigned in the first condition, and the current
+        // response object has an address that is different, that is, a different establishment requiring a new record
         if (!(record.address === responseSorted.address)){
             var record = Object.create(indexRecord);
             record.name = responseSorted.businessname;
@@ -201,6 +203,8 @@ function uniqueRecord(record, responseSorted, offset){
             record.offset = offset;
             record.violations = 1;
         }
+        // if otherwise, the address matches, the establishment matches that in the response, and only the violations count
+        // is incremented for that establishment.
         else {
             record.violations += 1;
         }
@@ -265,8 +269,13 @@ function showSearchResults(violNum, estNum){
 
 function getZip(zip){
     // console.log("get establishment");
+    var token = '';
     var request = {
-        $query: 'SELECT businessname, address, zip, violdesc, comments, result, resultdttm, violation WHERE zip=\''+zip+'\'' //ORDER BY businessname DESC
+        // $limit: 2000,
+        // $offset: 0,
+        $query: 'SELECT businessname, address, zip, violdesc, comments, result, resultdttm, violation WHERE zip=\''+zip+'\' LIMIT 50000'
+        // $$app_token: token
+        
     };
     
     $.ajax({
