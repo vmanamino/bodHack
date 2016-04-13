@@ -152,22 +152,24 @@ function createRecords(response, names){
                 violationRecord.result = responseSorted[j].result;
                 violationRecord.resultdttm = responseSorted[j].resultdttm;
                 violations.push(violationRecord);
-                record.violations += 1;
-                if (!record.zip){
-                    record.zip = responseSorted[j].zip;
-                }
-                if (!record.address){
-                    record.address = responseSorted[j].address;
-                }
-                if (!record.offset){
-                    record.offset = offset;
-                }
+                record = uniqueRecord(record, responseSorted[j], offset);
+                // record.violations += 1;
+                // if (!record.zip){
+                //     record.zip = responseSorted[j].zip;
+                // }
+                // if (!record.address){
+                //     record.address = responseSorted[j].address;
+                // }
+                // if (!record.offset){
+                //     record.offset = offset;
+                // }
             }
             else {
                 offset = j;
                 break;
             }
         }
+        // 
         records.push(record);
     }
     console.log(records);
@@ -176,6 +178,34 @@ function createRecords(response, names){
     // }).indexOf('HOT TOMATOES');
     // console.log(display);
     console.log(violations);
+}
+
+//create record based on both name match (tested above) and address match (in the following function)
+function uniqueRecord(record, responseSorted, offset){
+    // this is the record to return
+    // var returnRecord = Object.create(record);
+    // this is a new and unique record, but also the first time that a businessname appears in the response
+    if (!record.violations){
+        record.zip = responseSorted.zip;
+        record.address = responseSorted.address;
+        record.offset = offset;
+        record.violations = 1; // new and unique record
+    }
+    else {
+        // this is a new and unique record
+        if (!(record.address === responseSorted.address)){
+            var record = Object.create(indexRecord);
+            record.name = responseSorted.businessname;
+            record.zip = responseSorted.zip
+            record.address = responseSorted.address;
+            record.offset = offset;
+            record.violations = 1;
+        }
+        else {
+            record.violations += 1;
+        }
+    }
+    return record;
 }
 
 // create the index that will point to a business record
@@ -295,6 +325,7 @@ $(document).ready( function() {
         $(".search-results").html('');
         $(".listing").empty();
         $(".record").empty();
+        $('.violations').empty();
         // $('.listing').html('');
         var zip = $(this).find("input[name='zip']").val();
         getZip(zip);
