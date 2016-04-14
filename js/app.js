@@ -182,8 +182,6 @@ function createRecords(response, names){
 
 //create record based on both name match (tested above) and address match (in the following function)
 function uniqueRecord(record, responseSorted, offset){
-    // this is the record to return
-    // var returnRecord = Object.create(record);
     // this is a new and unique record, but also the first time that a businessname appears in the response
     if (!record.violations){
         record.zip = responseSorted.zip;
@@ -201,7 +199,7 @@ function uniqueRecord(record, responseSorted, offset){
             record.zip = responseSorted.zip
             record.address = responseSorted.address;
             record.offset = offset;
-            record.violations = 1;
+            record.violations = 1; // new and unique
         }
         // if otherwise, the address matches, the establishment matches that in the response, and only the violations count
         // is incremented for that establishment.
