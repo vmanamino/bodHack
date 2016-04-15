@@ -153,16 +153,6 @@ function createRecords(response, names){
                 violationRecord.resultdttm = responseSorted[j].resultdttm;
                 violations.push(violationRecord);
                 record = uniqueRecord(record, responseSorted[j], offset);
-                // record.violations += 1;
-                // if (!record.zip){
-                //     record.zip = responseSorted[j].zip;
-                // }
-                // if (!record.address){
-                //     record.address = responseSorted[j].address;
-                // }
-                // if (!record.offset){
-                //     record.offset = offset;
-                // }
             }
             else {
                 offset = j;
@@ -239,10 +229,6 @@ function createIndex(names){
     return indexList;
     
 }
-
-// function createViolations(){
-    
-// }
 
 // group returned establishments by bussinessname
 function groupEstablishments(response){
