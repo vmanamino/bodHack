@@ -67,16 +67,53 @@ function showViolation(object){
         $(".violations").empty();
         addRecord(object.businessname);
     });
-    var code = viol.find('.code');
-    code.text(object.violation);
-    var desc = viol.find('.desc');
-    desc.text(object.desc);
-    var comments = viol.find('.comments');
-    comments.text(object.comments);
-    var result = viol.find('.result');
-    result.text(object.result);
-    var resultdt = viol.find('.resultdt');
-    resultdt.text(object.resultdttm);
+    
+    if (object.violation){
+        var code = viol.find('.code');
+        code.text(object.violation);
+    }
+    else {
+        var label = viol.find('.label-code');
+        label.css("display", "none")
+    }
+    
+    if (object.desc){
+        var desc = viol.find('.desc');
+        desc.text(object.desc);
+    }
+    else {
+        var label = viol.find('.label-desc');
+        label.css("display", "none")
+    }
+   
+    if (object.comments){
+        var comments = viol.find('.comments');
+        comments.text(object.comments);
+    }
+    else {
+        var label = viol.find('.label-comments');
+        label.css("display", "none");
+    }
+    
+    if (object.result){
+        var result = viol.find('.result');
+        result.text(object.result);
+    }
+    else {
+        var label = viol.find('.label-result');
+        label.css("display", "none")
+    }
+    
+    if (object.resultdttm){
+        var resultdt = viol.find('.resultdt');
+        resultdt.text(object.resultdttm);
+    }
+    else {
+        var label = viol.find('.label-resultdt');
+        label.css("display", "none");
+    }
+    
+    
     $('.record').empty();
     $('.violations').append(viol);
 }
